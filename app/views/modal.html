@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <script src={{{appclient}}}></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/dist/crayons/crayons.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@freshworks/crayons@v4/css/crayons-min.css" />
+  </head>
+  <body>
+    <script>
+      const init = async () => {
+        try {
+        let data = await client.instance.context();
+        console.log(data); // context
+        const fileName = data.file_name;
+        const fileSize = data.file_size;
+        const fileType = data.file_type;
+        const fileDescription = data.file_description;
+        const fileTag = data.file_tag;
+        const fileUploadedAt = data.file_uploaded_at;
+
+        document.getElementById("file_name").innerText = `File Name: ${fileName}`;
+        document.getElementById("file_size").innerText = `File Size: ${fileSize}`;
+        document.getElementById("file_type").innerText = `File Type: ${fileType}`;
+        document.getElementById("file_description").innerText = `Description: ${fileDescription}`;
+        document.getElementById("file_tag").innerText = `Tag: ${fileTag}`;
+        document.getElementById("file_uploaded_at").innerText = `Uploaded At: ${fileUploadedAt}`;
+      } catch (error) {
+        console.error(error);
+      }
+      init();
+    }
+    </script>
+    <div>
+      <h2>File information</h2>
+      <p id="file_name"></p>
+      <p id="file_size"></p>
+      <p id="file_type"></p>
+      <p id="file_description"></p>
+      <p id="file_tag"></p>
+      <p id="file_uploaded_at"></p>
+    </div>
+  </body>
+</html>
