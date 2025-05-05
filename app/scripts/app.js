@@ -1,7 +1,6 @@
 async function uploadFile() {
   const fileInput = document.getElementById('fileInput');
   const files = await fileInput.getFiles();
-  console.log(files);
   const file = files[0];
   const desc = document.getElementById("descInput").value;
   const tag = document.getElementById("tagInput").value;
@@ -12,8 +11,6 @@ async function uploadFile() {
   formData.append('description', desc);
   formData.append("tag", tag);
   formData.append('filename', file.name);
-  console.log(file);
-  console.log(formData);
   try {
     const response = await client.files.upload(formData);
     console.info('File uploaded successfully');
@@ -29,8 +26,8 @@ async function downloadFile(fileId) {
   try {
     const res = await client.files.get(fileId);
     window.open(res.download_url, "_blank");
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     notify("danger", "Unable to open file");
   }
 }
@@ -42,7 +39,6 @@ async function deleteFile(fileId) {
       saveLabel: "Yes",
       cancelLabel: "No"
     });
-    console.log(result);
     if(result === "No") {
       console.info("User cancelled the file delete operation");
       return;
@@ -66,8 +62,8 @@ async function loadFiles() {
   const btnUploadFile = document.getElementById("btnUploadFile");
   btnUploadFile.addEventListener("fwClick", uploadFile);
   try {
-    const res = await client.files.list({});
-    const files = res.files || [];
+    const response = await client.files.list({});
+    const files = response.files || [];
     const tbody = document.getElementById("fileList");
     const noFilesDiv = document.getElementById("noFiles");
     const filesTableDiv = document.getElementById("filesTable");
@@ -128,12 +124,9 @@ function notify(type, message) {
 }
 
 function onAppActivate() {
-  console.log("App activated");
   loadFiles();
   const btnUploadFile = document.getElementById("btnUploadFile");
   btnUploadFile.addEventListener("fwClick", uploadFile);
-  console.log('btnUploadFile');
-  console.log(btnUploadFile);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
