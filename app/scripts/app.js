@@ -25,16 +25,6 @@ async function uploadFile() {
   }
 }
 
-async function viewFile(fileId) {
-  try {
-    const res = await client.files.get(fileId);
-    console.log(res);
-  } catch (e) {
-    console.error(e);
-    notify("danger", "Unable to open file");
-  }
-}
-
 async function downloadFile(fileId) {
   try {
     const res = await client.files.get(fileId);
@@ -102,7 +92,6 @@ async function loadFiles() {
         <td>${new Date(file.created_at).toLocaleString()}</td>
         <td>${file.tag || ""}</td>
         <td class="actions">
-          <fw-button data-action="view" data-file-id="${file.id}" color="primary">View</fw-button>
           <fw-button data-action="download" data-file-id="${file.id}">Download</fw-button>
           <fw-button data-action="delete" data-file-id="${file.id}" color="danger">Delete</fw-button>
         </td>
@@ -110,29 +99,14 @@ async function loadFiles() {
       tbody.appendChild(tr);
     });
     
-    fileList.addEventListener('fwClick', async function (event) {
+    fileList.addEventListener('fwClick', function (event) {
             const target = event.target;
             if (target.tagName.toLowerCase() === 'fw-button') {
               const action = target.dataset.action;
               const fileId = target.dataset.fileId;
 
               if (action && fileId) {
-                if (action === 'view') {
-                  viewFile(fileId);
-                  try {
-                    let data = await client.interface.trigger('showModal', {
-                      title: 'Ticket Information',
-                      template: './views/modal.html',
-                      data: {
-                        file_id: fileId
-                      }
-                    });
-                    console.log(data); // success message
-                  } catch (error) {
-                      // failure operation
-                    console.error(error);
-                  }
-                } else if (action === 'download') {
+                if (action === 'download') {
                   downloadFile(fileId);
                 } else if (action === 'delete') {
                   deleteFile(fileId);
